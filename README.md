@@ -1,3 +1,2 @@
-# Simple JSON Chatbot
-A chatbot written with p5.js and JSON.
-It provides info about a class taguht at NYU.
+# Chatbots
+Using this repo to upload code for simple chatbots created the class "Chatbots for Art's Sake."

@@ -1,2 +1,3 @@
-# Chatbots
-Using this repo to upload code for a bunch of super simple chatbots.
+# Simple JSON Chatbot
+A chatbot written with p5.js and JSON.
+It provides info about a class taguht at NYU.

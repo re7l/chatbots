@@ -11,7 +11,7 @@ const LaunchRequestHandler = {
     },
     handle(handlerInput) {
         const speakOutput = 'Welcome to the Proust Questionnaire.';
-
+        console.log("Proust Questionnaire Skill Initiated. Yay!");
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
@@ -39,12 +39,43 @@ const AskQuestionsIntentHandler = {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AskQuestionsIntent';
     },
-    handle(handlerInput) {
+    async handle(handlerInput) {
+        
+        let happinessVal = handlerInput.requestEnvelope.request.intent.slots.happiness.value;
+        let miseryVal = handlerInput.requestEnvelope.request.intent.slots.misery.value;
+        
+        //sending the slot values to session attributes
+        await handlerInput.attributesManager.setSessionAttributes ({"happiness":happinessVal, "misery":miseryVal});
+        
         const speakOutput = 'Thank you for answering the questions.';
-
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
+            .getResponse();
+    }
+};
+
+const RecallAnswersIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'RecallAnswersIntent';
+    },
+    async handle(handlerInput) {
+        let speakOutput = '';
+        
+        let sessionJSON = await handlerInput.attributesManager.getSessionAttributes();
+        
+        if(sessionJSON["happiness"]){
+            let happinessVal = sessionJSON["happiness"];
+            let miseryVal = sessionJSON["misery"];
+            speakOutput = "Your idea of happiness is "+ happinessVal + " . " + "Your idea of misery is " + miseryVal + " .";
+        }else{
+           speakOutput = "You haven't answered all the questions yet. Say ask me those questions.";
+        }
+        
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .reprompt('I can ask you questions on the Prouse Questionnaire.')
             .getResponse();
     }
 };
@@ -161,6 +192,7 @@ exports.handler = Alexa.SkillBuilders.custom()
         LaunchRequestHandler,
         HelloWorldIntentHandler,
         AskQuestionsIntentHandler,
+        RecallAnswersIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         FallbackIntentHandler,

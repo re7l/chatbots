@@ -80,6 +80,20 @@ const RecallAnswersIntentHandler = {
     }
 };
 
+const AskBotAnswersIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AskBotAnswersIntent';
+    },
+    handle(handlerInput) {
+        const speakOutput = '<amazon:emotion name="excited" intensity="medium">My idea of happiness is to live in contact with those I love, with the beauties of nature, with a quantity of books and music, and to have, within easy distance,  a French theater.</amazon:emotion><break time="2s"/><amazon:emotion name="disappointed" intensity="high">My idea of misery is not to have known my mother or my grandmother.</amazon:emotion>';  
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .reprompt(speakOutput)
+            .getResponse();
+    }
+};
+
 const HelpIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
@@ -193,6 +207,7 @@ exports.handler = Alexa.SkillBuilders.custom()
         HelloWorldIntentHandler,
         AskQuestionsIntentHandler,
         RecallAnswersIntentHandler,
+        AskBotAnswersIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         FallbackIntentHandler,

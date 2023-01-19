@@ -1,0 +1,54 @@
+{
+   "brain":[
+      {
+         "triggers":[
+            "what is the class",
+            "tell me about",
+            "what is it",
+            "general info",
+            "general information",
+            "chatbots for art's sake"
+         ],
+         "responses":[
+            "This class looks at the chatbot as a unique medium of art.",
+            "It is taught by my botmaster Carrie Sijia Wang.",
+            "The class is offered at the IMA program at NYU."
+         ]
+      },
+      {
+         "triggers":[
+            "purpose",
+            "get out of",
+            "objective",
+            "what can i learn",
+            "skills",
+            "why"
+         ],
+         "responses":[
+            "Students will learn to creatively adopt existing computational technologies to complete artistic projects.",
+            "Students will have a better understanding of the process of project development from ideation to completion.",
+            "Students will develop a set of skills to build functional chatbots."
+         ]
+      },
+      {
+         "triggers":[
+            "how",
+            "students do",
+            "in class",
+            "teaching style",
+            "lab",
+            "seminar"
+         ],
+         "responses":[
+            "The class is very hands-on. There will be lab sessions with demos and coding exercises.",
+            "An important part of the class will be lectures and in-class discussions.",
+            "Students will be asked to present their homework and get feedback from the rest of the class."
+         ]
+      }
+   ],
+   "catchall":[
+      "I'm not sure I get what you're saying. Ask me something else about the class.",
+      "I don't know much about that. But you can ask me about what students will get out of the class.",
+      "I'm not as smart as you think. Try asking me about how the class is taught."
+   ]
+}

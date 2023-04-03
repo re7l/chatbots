@@ -10,7 +10,7 @@ const LaunchRequestHandler = {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
     },
     handle(handlerInput) {
-        const speakOutput = 'Hello! You can say start a new story to create a hero\'s journey with me.';
+        const speakOutput = '<speak><amazon:emotion name="excited" intensity="high"> Hello! You can say start a new story </amazon:emotion><break time="2s"/><amazon:emotion name="disappointed" intensity="high">to create a hero\'s journey with me.</amazon:emotion></speak>';
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -39,12 +39,47 @@ const StoryElementsIntentHandler = {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'StoryElementsIntent';
     },
-    handle(handlerInput) {
-        const speakOutput = 'Thank you for providing all the story elements.';
+    async handle(handlerInput) {
+        let heroname = handlerInput.requestEnvelope.request.intent.slots.heroname.value;
+        let heroprofession = handlerInput.requestEnvelope.request.intent.slots.heroprofession.value;
+        let wherefrom = handlerInput.requestEnvelope.request.intent.slots.wherefrom.value;
+        let whereto = handlerInput.requestEnvelope.request.intent.slots.whereto.value;
+        let enemy = handlerInput.requestEnvelope.request.intent.slots.enemy.value;
+        
+        let story = "Once upon a time, there was a "+ heroprofession + 
+        " called " + heroname + " in "+ wherefrom + " . "+ "One day, "+ 
+        heroname + " decided to embark on a journey to " + whereto + " . Along the way, "+ 
+        heroname + " had to overcome a lot of obstacles including defeating " + enemy + " ."
+        
+        await handlerInput.attributesManager.setSessionAttributes({"previousStory" : story});
+        const speakOutput = 'Say start a new story to create another story. Or say hear my story again to listen to the one you just created.';
+
+        return handlerInput.responseBuilder
+            .speak(story)
+            .reprompt(speakOutput)
+            .getResponse();
+    }
+};
+
+const RecallPreviousStoryIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'RecallPreviousStoryIntent';
+    },
+   async handle(handlerInput) {
+        let speakOutput = '';
+        let sessionJSON = await handlerInput.attributesManager.getSessionAttributes();
+        
+        if(sessionJSON["previousStory"]){
+            speakOutput = sessionJSON["previousStory"];
+        }else{
+            speakOutput = "You haven't created a story yet. You can say start a new story to do that."
+        }
+        const repromptOutput = 'Say start a new story to create another story. Or say hear my story again to listen to the one you just created.';
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
-            .reprompt(speakOutput)
+            .reprompt(repromptOutput)
             .getResponse();
     }
 };
@@ -162,6 +197,7 @@ exports.handler = Alexa.SkillBuilders.custom()
         HelloWorldIntentHandler,
         HelpIntentHandler,
         StoryElementsIntentHandler,
+        RecallPreviousStoryIntentHandler,
         CancelAndStopIntentHandler,
         FallbackIntentHandler,
         SessionEndedRequestHandler,
